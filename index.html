@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zbond Digital - Layanan Premium</title>
+    <style>
+        :root {
+            --primary: #00b4a0; /* Tosca */
+            --secondary: #00897b; /* Darker Tosca */
+            --accent: #ffc107; /* Yellow */
+            --dark: #00796b; /* Dark Tosca */
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --warning: #ff9800; /* Orange Yellow */
+            --gray: #adb5bd;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 100%;
+            padding: 15px;
+            margin: 0 auto;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 180, 160, 0.2);
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        .tagline {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .promo-badge {
+            background-color: var(--accent);
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .category-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            border-left: 4px solid var(--primary);
+        }
+        .category-card:active {
+            transform: scale(0.98);
+        }
+        .category-title {
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .service-list {
+            display: none; /* Hidden by default */
+            margin-top: 10px;
+        }
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .service-item:last-child {
+            border-bottom: none;
+        }
+        .service-name {
+            font-weight: 500;
+            flex: 2;
+        }
+        .service-price {
+            font-weight: 700;
+            color: var(--dark);
+            flex: 1;
+            text-align: right;
+        }
+        .info-note {
+            background-color: #e0f2f1;
+            color: #00695c;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 25px 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            border-left: 4px solid var(--accent);
+        }
+        .whatsapp-btn {
+            background-color: var(--accent);
+            color: #333;
+            text-align: center;
+            padding: 16px;
+            border-radius: 10px;
+            margin: 25px 0;
+            font-weight: 600;
+            text-decoration: none;
+            display: block;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            transition: all 0.3s;
+        }
+        .whatsapp-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 5px rgba(255, 193, 7, 0.3);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            animation: modalFadeIn 0.3s;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        .modal-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: white;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        .form-input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+        .selected-service {
+            background-color: #e0f7fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px dashed var(--primary);
+        }
+        .service-display {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .service-display-name {
+            font-weight: 500;
+        }
+        .service-display-price {
+            font-weight: 700;
+            color: var(--dark);
+        }
+        .submit-btn {
+            background-color: var(--accent);
+            color: #333;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #ffab00;
+        }
+        .unavailable {
+            color: var(--gray);
+            text-decoration: line-through;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.8rem;
+        }
+        .payment-link {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .toggle-icon {
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Zbond Digital</div>
+        <div class="tagline">Layanan Premium dengan Harga Terbaik</div>
+        <div class="promo-badge">PROMO TERBATAS!</div>
+    </header>
+    
+    <div class="container">
+        <div class="category-card">
+            <div class="category-header" onclick="toggleServiceList('canva')">
+                <h3 class="category-title">CANVA PRO</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="service-list" id="canva">
+                <div class="service-item">
+                    <span class="service-name">1 Bulan</span>
+                    <span class="service-price">Rp30.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">1 Tahun</span>
+                    <span class="service-price">Rp40.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Lifetime</span>
+                    <span class="service-price">Rp80.000</span>
+                </div>
+                <button class="submit-btn" style="margin-top: 10px;" onclick="openOrderModal('Canva Pro', 'canva')">Pilih Layanan Ini</button>
+            </div>
+        </div>
+        
+        <div class="category-card">
+            <div class="category-header" onclick="toggleServiceList('capcut-sharing')">
+                <h3 class="category-title">CAPCUT PRO SHARING</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="service-list" id="capcut-sharing">
+                <div class="service-item">
+                    <span class="service-name">1 Bulan (sharing)</span>
+                    <span class="service-price">Rp55.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">3 Bulan (sharing)</span>
+                    <span class="service-price">Rp120.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">6 Bulan (sharing)</span>
+                    <span class="service-price">Rp200.000</span>
+                </div>
+                <button class="submit-btn" style="margin-top: 10px;" onclick="openOrderModal('Capcut Pro Sharing', 'capcut-sharing')">Pilih Layanan Ini</button>
+            </div>
+        </div>
+        
+        <div class="category-card">
+            <div class="category-header" onclick="toggleServiceList('capcut-private')">
+                <h3 class="category-title">CAPCUT PRO PRIVATE</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="service-list" id="capcut-private">
+                <div class="service-item">
+                    <span class="service-name">1 Bulan (private)</span>
+                    <span class="service-price">Rp95.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">3 Bulan (private)</span>
+                    <span class="service-price">Rp215.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">6 Bulan (private)</span>
+                    <span class="service-price">Rp410.000</span>
+                </div>
+                <button class="submit-btn" style="margin-top: 10px;" onclick="openOrderModal('Capcut Pro Private', 'capcut-private')">Pilih Layanan Ini</button>
+            </div>
+        </div>
+        
+        <div class="category-card">
+            <div class="category-header" onclick="toggleServiceList('bundling')">
+                <h3 class="category-title">PAKET BUNDLING</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="service-list" id="bundling">
+                <div class="service-item">
+                    <span class="service-name">Canva 1 Tahun + Capcut 1 Bulan Sharing</span>
+                    <span class="service-price">Rp75.000</span>
+                </div>
+                <button class="submit-btn" style="margin-top: 10px;" onclick="openOrderModal('Paket Bundling', 'bundling')">Pilih Layanan Ini</button>
+            </div>
+        </div>
+        
+        <div class="category-card">
+            <div class="category-header" onclick="toggleServiceList('other-apps')">
+                <h3 class="category-title">APLIKASI LAINNYA</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="service-list" id="other-apps">
+                <div class="service-item">
+                    <span class="service-name">Microsoft 365 Lifetime</span>
+                    <span class="service-price">Rp170.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Adobe Creative Cloud</span>
+                    <span class="service-price">Rp120.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">PicsArt Pro</span>
+                    <span class="service-price">Rp55.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">ChatGPT Plus</span>
+                    <span class="service-price">Rp95.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Veo3 1 Tahun</span>
+                    <span class="service-price">Rp220.000</span>
+                </div>
+                <button class="submit-btn" style="margin-top: 10px;" onclick="openOrderModal('Aplikasi Lainnya', 'other-apps')">Pilih Layanan Ini</button>
+            </div>
+        </div>
+        
+        <div class="category-card">
+            <div class="category-header" onclick="toggleServiceList('entertainment')">
+                <h3 class="category-title">LAYANAN HIBURAN</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="service-list" id="entertainment">
+                <div class="service-item">
+                    <span class="service-name">Viu Premium 1 Tahun</span>
+                    <span class="service-price">Rp55.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Viu Lifetime</span>
+                    <span class="service-price">Rp120.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Netflix Private</span>
+                    <span class="service-price">Rp75.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">YouTube Premium</span>
+                    <span class="service-price">Rp65.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name unavailable">Disney+ Hotstar</span>
+                    <span class="service-price unavailable">Rp90.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Amazon Prime Video</span>
+                    <span class="service-price">Rp65.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Vidio.com</span>
+                    <span class="service-price">Rp65.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">WeTV</span>
+                    <span class="service-price">Rp50.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Spotify Premium</span>
+                    <span class="service-price">Rp60.000</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Loklok VIP</span>
+                    <span class="service-price">Rp55.000</span>
+                </div>
+                <button class="submit-btn" style="margin-top: 10px;" onclick="openOrderModal('Layanan Hiburan', 'entertainment')">Pilih Layanan Ini</button>
+            </div>
+        </div>
+        
+        <div class="info-note">
+            <p><strong>✔ 100% AKUN PREMIUM RESMI</strong> - Bukan aplikasi modifikasi</p>
+            <p><strong>✔ Garansi</strong> - Bantuan aktifasi sampai akun bisa digunakan</p>
+            <p><strong>⏰ Segera pesan</strong> karena slot terbatas!</p>
+            <p style="margin-top: 10px;"><strong>Pembayaran:</strong> 
+                <a href="https://shariang12.github.io/Pembayaran/payment.html" class="payment-link" target="_blank">
+                    Lihat Rekening Pembayaran
+                </a>
+            </p>
+        </div>
+        
+        <a href="https://wa.me/6283852330333" class="whatsapp-btn">
+            KONSULTASI DULU
+        </a>
+    </div>
+    
+    <!-- Modal Structure -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Pesan Layanan</div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="selected-service" id="selectedServiceDisplay">
+                    <div class="service-display">
+                        <span class="service-display-name">Pilih layanan terlebih dahulu</span>
+                        <span class="service-display-price">Rp0</span>
+                    </div>
+                </div>
+                
+                <form id="orderForm">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Nama Lengkap</label>
+                        <input type="text" id="name" class="form-input" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email untuk Akun</label>
+                        <input type="email" id="email" class="form-input" placeholder="Masukkan email yang akan digunakan" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service" class="form-label">Pilih Layanan</label>
+                        <select id="service" class="form-input" onchange="updateSelectedService()" required>
+                            <option value="">-- Pilih Layanan --</option>
+                            <!-- Options will be filled by JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="submit-btn" onclick="sendWhatsAppMessage()">
+                        PESAN SEKARANG
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p> &copy; 2025 Zbond Digital</p>
+        <p>Jam Operasional: 08.00 - 22.00 WIB</p>
+    </div>
+
+    <script>
+        // Service data with +20k price increase
+        const services = {
+            'canva': [
+                { name: 'Canva Pro 1 Bulan', price: 30000 },
+                { name: 'Canva Pro 1 Tahun', price: 40000 },
+                { name: 'Canva Pro Lifetime', price: 80000 }
+            ],
+            'capcut-sharing': [
+                { name: 'Capcut Pro 1 Bulan (sharing)', price: 55000 },
+                { name: 'Capcut Pro 3 Bulan (sharing)', price: 120000 },
+                { name: 'Capcut Pro 6 Bulan (sharing)', price: 200000 }
+            ],
+            'capcut-private': [
+                { name: 'Capcut Pro 1 Bulan (private)', price: 95000 },
+                { name: 'Capcut Pro 3 Bulan (private)', price: 215000 },
+                { name: 'Capcut Pro 6 Bulan (private)', price: 410000 }
+            ],
+            'bundling': [
+                { name: 'Canva Pro 1 Tahun + Capcut Pro 1 Bulan Sharing', price: 75000 }
+            ],
+            'other-apps': [
+                { name: 'Microsoft Office 365 Lifetime', price: 170000 },
+                { name: 'Adobe Creative Cloud All Apps 1 Bulan', price: 120000 },
+                { name: 'PicsArt Pro 1 Bulan', price: 55000 },
+                { name: 'ChatGPT Plus+ 1 Bulan', price: 95000 },
+                { name: 'Veo3 1 Tahun', price: 220000 }
+            ],
+            'entertainment': [
+                { name: 'Viu Premium 1 Tahun', price: 55000 },
+                { name: 'Viu Premium Lifetime', price: 120000 },
+                { name: 'Netflix Private 1 Bulan', price: 75000 },
+                { name: 'YouTube Premium 1 Bulan', price: 65000 },
+                { name: 'Amazon Prime Video Private 1 Bulan', price: 65000 },
+                { name: 'Vidio.com 1 Bulan', price: 65000 },
+                { name: 'WeTV 1 Bulan', price: 50000 },
+                { name: 'Spotify Premium 1 Bulan', price: 60000 },
+                { name: 'Loklok VIP 1 Bulan', price: 55000 }
+            ]
+        };
+        
+        let currentCategory = '';
+        
+        function toggleServiceList(categoryId) {
+            const serviceList = document.getElementById(categoryId);
+            const toggleIcon = serviceList.previousElementSibling.querySelector('.toggle-icon');
+            
+            if (serviceList.style.display === 'block') {
+                serviceList.style.display = 'none';
+                toggleIcon.textContent = '▼';
+            } else {
+                // Close all other service lists first
+                document.querySelectorAll('.service-list').forEach(list => {
+                    if (list.id !== categoryId) {
+                        list.style.display = 'none';
+                        list.previousElementSibling.querySelector('.toggle-icon').textContent = '▼';
+                    }
+                });
+                
+                serviceList.style.display = 'block';
+                toggleIcon.textContent = '▲';
+            }
+        }
+        
+        function openOrderModal(categoryName, categoryId) {
+            currentCategory = categoryId;
+            const modal = document.getElementById('orderModal');
+            const serviceSelect = document.getElementById('service');
+            
+            // Clear previous options
+            serviceSelect.innerHTML = '<option value="">-- Pilih Layanan --</option>';
+            
+            // Add new options
+            services[categoryId].forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.name;
+                option.textContent = `${service.name} - Rp${service.price.toLocaleString('id-ID')}`;
+                option.setAttribute('data-price', service.price);
+                serviceSelect.appendChild(option);
+            });
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('orderModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function updateSelectedService() {
+            const serviceSelect = document.getElementById('service');
+            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+            const displayDiv = document.getElementById('selectedServiceDisplay');
+            
+            if (selectedOption.value) {
+                const price = selectedOption.getAttribute('data-price');
+                displayDiv.innerHTML = `
+                    <div class="service-display">
+                        <span class="service-display-name">${selectedOption.value}</span>
+                        <span class="service-display-price">Rp${parseInt(price).toLocaleString('id-ID')}</span>
+                    </div>
+                `;
+            } else {
+                displayDiv.innerHTML = `
+                    <div class="service-display">
+                        <span class="service-display-name">Pilih layanan terlebih dahulu</span>
+                        <span class="service-display-price">Rp0</span>
+                    </div>
+                `;
+            }
+        }
+        
+        function sendWhatsAppMessage() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const serviceSelect = document.getElementById('service');
+            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+            
+            if (!name || !email || !selectedOption.value) {
+                alert('Harap lengkapi semua data terlebih dahulu!');
+                return;
+            }
+            
+            const serviceName = selectedOption.value;
+            const price = selectedOption.getAttribute('data-price');
+            
+            const message = `Halo Zbond Digital, saya ingin memesan layanan berikut:
+            
+Nama: ${name}
+Email: ${email}
+Layanan: ${serviceName}
+Harga: Rp${parseInt(price).toLocaleString('id-ID')}
+
+Saya sudah membaca syarat dan ketentuan. Mohon info langkah selanjutnya. Terima kasih.`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/6283852330333?text=${encodedMessage}`, '_blank');
+            
+            // Reset form
+            document.getElementById('orderForm').reset();
+            document.getElementById('selectedServiceDisplay').innerHTML = `
+                <div class="service-display">
+                    <span class="service-display-name">Pilih layanan terlebih dahulu</span>
+                    <span class="service-display-price">Rp0</span>
+                </div>
+            `;
+            
+            closeModal();
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('orderModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
